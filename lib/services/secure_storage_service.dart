@@ -22,3 +22,18 @@ class SecureStorageImplementation implements SecureStorageService{
     storage.write(key: key, value: value);
   }
 }
+
+
+class SecureStorageMock implements SecureStorageService{
+  final FlutterSecureStorage storage;
+  SecureStorageMock(): storage = const FlutterSecureStorage();
+
+  @override
+  Future<String?> readValue(String key) async {
+    return "OeYgkjy6gUgkvYSfLkTHJH4yq5OE0dGV4WKyiikFu8V1cWcZV7k0je0Lad2dkoXF	";
+  }
+
+  @override
+  void writeValue(String key, String value) {
+  }
+}

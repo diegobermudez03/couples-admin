@@ -11,6 +11,6 @@ Future<void> initializeDepedencies()async{
   final TokensManagement tokens = TokensManagement(secureStorage);
 
 
-  depIn.registerFactory<LoginBloc>(()=>LoginBloc());
+  depIn.registerFactory<LoginBloc>(()=>LoginBloc(tokens));
   depIn.registerFactory<LoadingBloc>(()=>LoadingBloc(tokens)..checkToken());
 }
