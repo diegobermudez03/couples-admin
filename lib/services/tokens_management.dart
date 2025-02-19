@@ -26,4 +26,10 @@ class TokensManagement {
   }
   
   String? getAccessToken() => _accessToken;
+
+  void deleteRefreshToken(){
+    _refreshToken = null;
+    _accessToken = null;
+    _storage.deleteValue(refreshTokenKey);
+  }
 }

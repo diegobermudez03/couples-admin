@@ -14,7 +14,7 @@ class LoadingScreen extends StatelessWidget {
         listener: (context, state) {
           if(state is LoadingCheckedState){
             if(state.message == LoadingGoTo.mainPage){
-              context.go(routeLogin);
+              context.go(routeMainPage);
             }else{
               context.go(routeLogin);
             }

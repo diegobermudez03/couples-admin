@@ -1,5 +1,6 @@
 import 'package:admin_site/core/navigation/router.dart';
 import 'package:admin_site/presentation/auth/bloc/login_bloc.dart';
+import 'package:admin_site/shared/dialogs/error_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -12,20 +13,19 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
   late final TextEditingController controller;
 
-  @override 
+  @override
   void initState() {
     controller = TextEditingController();
     super.initState();
   }
-  @override 
+
+  @override
   void dispose() {
     controller.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +46,7 @@ class _LoginPageState extends State<LoginPage> {
                     flex: 5,
                   ),
                   TextField(
+                    controller: controller,
                     decoration: InputDecoration(filled: true, border: OutlineInputBorder()),
                   ),
                   const Spacer(),
@@ -54,18 +55,27 @@ class _LoginPageState extends State<LoginPage> {
                     padding: EdgeInsets.symmetric(horizontal: 50),
                     child: BlocListener<LoginBloc, LoginState>(
                       listener: (context, state) {
-                        if(state is LoginStoredState){
-                          print("effectively moving on");
+                        if (state is LoginStoredState) {
                           context.go(routeMainPage);
                         }
+                        if (state is LoginErrorState) {
+                          showDialog(
+                              context: context,
+                              builder: (ctx) => ErrorDialog(
+                                    text: "Incorrect Token",
+                                  ));
+                        }
                       },
-                      child: ElevatedButton(
-                          onPressed: ()=> provider.loginToken(controller.text),
-                          style: ButtonStyle(
-                              backgroundColor: WidgetStatePropertyAll(colorScheme.primaryContainer),
-                              shape: WidgetStatePropertyAll(
-                                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))),
-                          child: Padding(padding: EdgeInsets.symmetric(vertical: 20), child: Text("Enter token"))
+                      child: BlocBuilder<LoginBloc, LoginState>(
+                        builder: (context, state) {
+                          return ElevatedButton(
+                              onPressed: state is LoginLoadingState ? null : () => provider.loginToken(controller.text),
+                              style: ButtonStyle(
+                                  backgroundColor: WidgetStatePropertyAll(colorScheme.primaryContainer),
+                                  shape: WidgetStatePropertyAll(
+                                      RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))),
+                              child: Padding(padding: EdgeInsets.symmetric(vertical: 20), child: Text("Enter token")));
+                        },
                       ),
                     ),
                   ),
